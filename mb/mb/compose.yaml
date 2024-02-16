@@ -1,0 +1,24 @@
+services:
+  mariadb:
+    image: 'mariadb:latest'
+    container_name: mb_mariadb
+    restart: unless-stopped
+    environment:
+      - 'MARIADB_DATABASE=${MARIA_DB}'
+      - 'MARIADB_PASSWORD=${MARIA_DB_PASSWORD}'
+      - 'MARIADB_USER=${MARIA_DB_USER}'
+    ports:
+      - '3306'
+
+  adminer:
+    image: adminer:latest
+    container_name: mb_adminer
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    environment:
+      ADMINER_PLUGINS: 'tables-filter tinymce edit-calendar enum-option'
+      ADMINER_DESIGN: dracula
+      ADMINER_DEFAULT_SERVER: ${MARIA_DB_HOST}
+    ports:
+      - '8000:8060'
